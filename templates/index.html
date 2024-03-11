@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Scam Detection</title>
+       <style>
+      body {
+      height: 100vh;
+      background: #9CA512;
+      background: linear-gradient(270deg, #9CA512, #E95C0C);
+      font-family: "Inter", sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+      .container {
+          width: 600px;
+          padding: 1em;
+          background-color: black;
+
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
+      }
+      h1 {
+          text-align: center;
+          color: whitesmoke;
+          text-transform: uppercase;
+          font-weight: 700;
+      }
+      #input-text {
+          width: 94%;
+          padding: 1em;
+          margin: 1em auto 3em auto;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+      }
+      .button-wrap {
+          text-align: center;
+      }
+      button {
+          padding: 10px 20px;
+          margin-right: 10px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          background-color: whitesmoke;
+          color: black;
+          transition: background-color 0.3s ease-in-out;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: grey;
+          color: whitesmoke;
+      }
+
+      #prediction-result {
+          display: none;
+          text-align: center;
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: whitesmoke;
+      }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="container">
+            <h1>Scam Detection</h1>
+            <textarea id="input-text" placeholder="Type your message here..." rows="6"></textarea>
+            <div class="button-wrap">
+                <button id="predict-btn" onclick="predict()">Predict</button>
+                <button id="clear-btn" onclick="clearInput()">Clear</button>
+            </div>
+            <label id="prediction-result" style="display: none;"></label>
+        </div>
+    </section>
+
+    <script>
+        function predict() {
+            const inputText = document.getElementById('input-text').value;
+            fetch("/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: inputText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const predictionLabel = document.getElementById('prediction-result');
+                predictionLabel.textContent = `Prediction: ${data.prediction}`;
+                predictionLabel.style.display = 'block';
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+
+        function clearInput() {
+            document.getElementById('input-text').value = '';
+            document.getElementById('prediction-result').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
